@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+        <display-name>Archetype Created Web Application</display-name>
+
+        <!-- 配置前端控制器，加载 SpringMVC配置文件，生成Spring子容器-->
+        <servlet>
+          <servlet-name>dispatcherServlet</servlet-name>
+          <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+          <!-- 加载springmvc.xml配置文件 -->
+          <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springmvc.xml</param-value>
+          </init-param>
+          <!-- 启动服务器，创建该Servlet -->
+          <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+          <servlet-name>dispatcherServlet</servlet-name>
+          <url-pattern>/</url-pattern>
+        </servlet-mapping>
+
+        <!-- 解决中文乱码的过滤器 -->
+        <filter>
+          <filter-name>characterEncodingFilter</filter-name>
+          <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+          <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+          </init-param>
+        </filter>
+        <filter-mapping>
+          <filter-name>characterEncodingFilter</filter-name>
+          <url-pattern>/*</url-pattern>
+        </filter-mapping>
+
+        <!-- Spring 核心监听器加载 SpringIOC容器（父容器） -->
+        <listener>
+          <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        </listener>
+        <!-- 设置配置文件路径 -->
+        <context-param>
+            <param-name>contextConfigLocation</param-name>
+            <!-- 让 Spring的父IOC容器去加载 springSecurity配置文件 -->
+            <param-value>classpath:applicationContext.xml</param-value>
+        </context-param>
+
+        <!-- 配置 RequestContextListen监听器，为了在 LogAop中使用 Request对象 -->
+        <listener>
+            <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+        </listener>
+
+        <!-- 配置 springSecurity 核心过滤器链 -->
+        <filter>
+            <filter-name>springSecurityFilterChain</filter-name>
+            <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        </filter>
+        <filter-mapping>
+            <filter-name>springSecurityFilterChain</filter-name>
+            <url-pattern>/*</url-pattern>
+        </filter-mapping>
+
+        <!-- 指定错误跳转页面 局限：只能在 Web工程处理异常 -->
+        <!--
+        <error-page>
+            <error-code>403</error-code>
+            <location>/403.jsp</location>
+        </error-page>
+        <error-page>
+            <error-code>404</error-code>
+            <location>/404.jsp</location>
+        </error-page>
+        <error-page>
+            <error-code>500</error-code>
+            <location>/500.jsp</location>
+        </error-page>
+        -->
+
+        <!-- 指定默认访问页面 -->
+        <welcome-file-list>
+            <welcome-file>index.html</welcome-file>
+            <welcome-file>index.htm</welcome-file>
+            <welcome-file>index.jsp</welcome-file>
+            <welcome-file>default.html</welcome-file>
+            <welcome-file>default.htm</welcome-file>
+            <welcome-file>default.jsp</welcome-file>
+        </welcome-file-list>
+
+</web-app>
